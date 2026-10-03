@@ -72,6 +72,8 @@ private struct MovieGrid: View {
     private var grid: some View {
         Text("\(movies.count) movies, build the grid here")
     }
+
+
 }
 
 /// One cell of the grid. Tapping it opens the movie details.

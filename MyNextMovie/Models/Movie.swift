@@ -18,52 +18,61 @@ let textSeparator = " · "
 /// TMDB JSON keys are snake_case, e.g. `release_date`.
 /// Decode them with `JSONDecoder.KeyDecodingStrategy.convertFromSnakeCase`.
 nonisolated struct Movie: Identifiable, Hashable, Codable {
-    let id: Int
-    let title: String
-    let overview: String
-    let releaseDate: String  // "1999-03-31", empty when unknown
-    let posterPath: String?  // nil when TMDB has no poster
-    let voteAverage: Double
-    let genreIds: [Int]
+  let id: Int
+  let title: String
+  let overview: String
+  let releaseDate: String  // "1999-03-31", empty when unknown
+  let posterPath: String?  // nil when TMDB has no poster
+  let voteAverage: Double
+  let genreIds: [Int]
 }
 
-/// "1999-03-31" -> "1999", empty when the date is unknown.
+///// "1999-03-31" -> "1999", empty when the date is unknown.
+//func releaseYear(_ movie: Movie) -> String {
+//  // TODO: Lab 1, task 1. Return the first `releaseYearLength` characters of
+//  // `movie.releaseDate`, or "" when the date is shorter than that.
+//  // Hint: `String(text.prefix(count))`.
+//  return ""
+//}
+
 func releaseYear(_ movie: Movie) -> String {
-    // TODO: Lab 1, task 1. Return the first `releaseYearLength` characters of
-    // `movie.releaseDate`, or "" when the date is shorter than that.
-    // Hint: `String(text.prefix(count))`.
-    return ""
+  return String(movie.releaseDate.prefix(releaseYearLength))
 }
+
+
 
 /// 8.24 -> "8.2"
 func formattedRating(_ movie: Movie) -> String {
-    // TODO: Lab 1, task 1. Format `movie.voteAverage` with `ratingFormat`.
-    // Hint: `String(format: ratingFormat, number)`.
-    return ""
+  // TODO: Lab 1, task 1. Format `movie.voteAverage` with `ratingFormat`.
+  // Hint: `String(format: ratingFormat, number)`.
+  return String(format: ratingFormat, movie.voteAverage)
+//  return ""
 }
 
 /// 8.24 -> "★ 8.2"
 func ratingWithStar(_ movie: Movie) -> String {
-    // TODO: Lab 1, task 2. `ratingStar`, a space, then `formattedRating(movie)`.
-    return ""
+  // TODO: Lab 1, task 2. `ratingStar`, a space, then `formattedRating(movie)`.
+  return "\(ratingStar) \(formattedRating(movie))"
 }
 
 /// "2014 · ★ 8.4", or "★ 8.4" when the release date is unknown.
 func yearAndRating(_ movie: Movie) -> String {
-    // TODO: Lab 1, task 2. Join `releaseYear(movie)` and `ratingWithStar(movie)`
-    // with `textSeparator`. Leave the year and the separator out when the year is "".
-    return ""
+  // TODO: Lab 1, task 2. Join `releaseYear(movie)` and `ratingWithStar(movie)`
+  // with `textSeparator`. Leave the year and the separator out when the year is "".
+    var tmp = releaseYear(movie)
+    tmp.append(ratingWithStar(movie))
+  return tmp
 }
 
 /// Poster address on the TMDB image server, nil when the movie has no poster.
 func posterURL(_ movie: Movie) -> URL? {
-    let posterPath = movie.posterPath ?? ""
-    if posterPath.isEmpty {
-        return nil
-    }
-    return URL(string: tmdbPosterBaseURL + posterPath)
+  let posterPath = movie.posterPath ?? ""
+  if posterPath.isEmpty {
+    return nil
+  }
+  return URL(string: tmdbPosterBaseURL + posterPath)
 }
 
 func hasPoster(_ movie: Movie) -> Bool {
-    return posterURL(movie) != nil
+  return posterURL(movie) != nil
 }
